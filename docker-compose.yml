@@ -1,0 +1,33 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+
+    container_name: c-drishti-backend
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      APP_NAME: C-Drishti API
+      APP_VERSION: 0.3.0
+      ENVIRONMENT: docker
+      DEBUG: "false"
+
+      API_V1_PREFIX: /api/v1
+
+      FRONTEND_ORIGIN: http://localhost:8080
+
+      OLLAMA_BASE_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: llama3.2:3b
+
+      RAG_COLLECTION_NAME: c_drishti_legal
+      RAG_MAX_DISTANCE: "1.35"
+
+    volumes:
+      - ./data:/data:ro
+      - ./backend/app/rag/documents:/app/app/rag/documents:ro
+      - ./backend/storage/chroma:/app/backend/storage/chroma
+
+    restart: unless-stopped
