@@ -1,0 +1,50 @@
+name: C-Drishti Backend Tests
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Backend Test Suite
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: backend/requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run test suite
+        env:
+          APP_NAME: C-Drishti API
+          APP_VERSION: 0.3.0
+          ENVIRONMENT: test
+          DEBUG: "false"
+          API_V1_PREFIX: /api/v1
+          FRONTEND_ORIGIN: http://localhost:8080
+          OLLAMA_BASE_URL: http://127.0.0.1:11434
+          OLLAMA_MODEL: llama3.2:3b
+          RAG_COLLECTION_NAME: c_drishti_legal
+          RAG_MAX_DISTANCE: "1.35"
+        run: pytest -v
