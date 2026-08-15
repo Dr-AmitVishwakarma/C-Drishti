@@ -25,6 +25,37 @@ C-Drishti demonstrates an integrated architecture in which:
 
 ---
 
+
+## Screenshots
+
+### Integrated Dashboard
+
+The main C-Drishti interface provides an integrated view of enforcement intelligence, analytics, and decision-support capabilities.
+
+![C-Drishti Integrated Dashboard](docs/screenshots/dashboard.png)
+
+### Hybrid Anomaly Engine
+
+The anomaly engine combines statistical 3-sigma detection with Isolation Forest to identify and prioritise unusual procurement patterns.
+
+![C-Drishti Hybrid Anomaly Engine](docs/screenshots/anomaly-engine.png)
+
+### AI-Assisted Legal Intelligence
+
+The Legal Assistant uses retrieval-augmented generation to retrieve relevant legal evidence and generate evidence-grounded responses using a locally hosted LLM.
+
+![C-Drishti Legal RAG Assistant](docs/screenshots/legal-assistant.png)
+
+### FastAPI Backend
+
+The backend exposes versioned REST APIs for system monitoring, anomaly analytics, legal retrieval, RAG generation, and health checks.
+
+![C-Drishti FastAPI Swagger API](docs/screenshots/swagger-api.png)
+
+---
+
+
+
 ## Core Capabilities
 
 ### 1. Hybrid Anomaly Detection
