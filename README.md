@@ -1,29 +1,45 @@
 # C-Drishti
 
-**AI-Assisted Integrated Enforcement Intelligence and Decision-Support Platform**
+AI-assisted enforcement intelligence and decision-support platform combining **hybrid anomaly detection** with an **evidence-grounded Legal RAG assistant**.
 
-C-Drishti is an open-source research and demonstration prototype exploring how statistical analytics, machine learning, retrieval-augmented generation (RAG), local large language models, and human-in-the-loop workflows can support integrated public-sector enforcement and decision support.
+[![Backend Tests](https://github.com/Dr-AmitVishwakarma/C-Drishti/actions/workflows/tests.yml/badge.svg)](https://github.com/Dr-AmitVishwakarma/C-Drishti/actions/workflows/tests.yml)
 
-The platform combines a hybrid procurement anomaly engine with an evidence-grounded legal and policy assistant.
+## Features
 
-> **Important:** C-Drishti is a research and demonstration system. Its analytics, anomaly scores, retrieved legal material, and generated responses must not be treated as evidence of wrongdoing, legal advice, or authority for consequential enforcement action.
+- Hybrid anomaly detection using **3-Sigma + Isolation Forest**
+- Explainable anomaly ranking and risk classification
+- Legal RAG using **Sentence Transformers + ChromaDB**
+- Local LLM inference with **Ollama / Llama 3.2**
+- Evidence filtering and source-aware responses
+- Human-in-the-loop decision support
+- FastAPI REST API
+- Docker support
+- Automated pytest suite
 
----
+## Architecture
 
-## Overview
-
-Public-sector enforcement often requires officers to work across fragmented departmental systems, operational records, legal documents, and large volumes of data.
-
-C-Drishti demonstrates an integrated architecture in which:
-
-- operational data can be screened for unusual patterns;
-- statistical and machine-learning models can prioritise cases for review;
-- legal and policy documents can be retrieved semantically;
-- a local LLM can generate responses grounded in retrieved evidence;
-- source metadata can be shown alongside generated answers;
-- human officers remain responsible for consequential decisions.
-
----
+```text
+                     C-Drishti
+                         │
+              ┌──────────┴──────────┐
+              │                     │
+       Anomaly Engine           Legal RAG
+              │                     │
+      ┌───────┴───────┐     Sentence Transformers
+      │               │             │
+   3-Sigma      Isolation Forest  ChromaDB
+      │               │             │
+      └───────┬───────┘        Legal Evidence
+              │                     │
+        Hybrid Risk             Ollama
+        Classification          Llama 3.2
+              │                     │
+              └──────────┬──────────┘
+                         │
+                 FastAPI Backend
+                         │
+                         ▼
+                Decision-Support UI
 
 
 ## Screenshots
@@ -55,236 +71,66 @@ The backend exposes versioned REST APIs for system monitoring, anomaly analytics
 ---
 
 
+Backend: Python, FastAPI, Pydantic
+ML: scikit-learn, Isolation Forest, Pandas, NumPy
+RAG: Sentence Transformers, ChromaDB, PyPDF
+LLM: Ollama, Llama 3.2
+Engineering: Docker, Docker Compose, pytest, GitHub Actions
 
-## Core Capabilities
-
-### 1. Hybrid Anomaly Detection
-
-The procurement anomaly engine combines:
-
-- 3-sigma statistical screening;
-- Isolation Forest;
-- multivariate feature analysis;
-- hybrid risk classification;
-- explainable anomaly reasons.
-
-The engine analyses features including:
-
-- procurement quantity;
-- delivery orders issued;
-- delivery orders lifted;
-- transport orders issued;
-- transport orders lifted;
-- total lifted quantity;
-- pending lifting quantity;
-- pending lifting percentage;
-- lifting ratios.
-
-The system distinguishes between:
-
-- statistical anomalies;
-- machine-learning anomalies;
-- hybrid anomalies.
-
-An anomaly is treated only as a **decision-support signal**.
-
----
-
-### 2. Legal and Policy RAG Assistant
-
-The Legal Assistant uses a retrieval-augmented generation pipeline:
-
-```text
-User Question
-      ↓
-Sentence Transformer
-      ↓
-Query Embedding
-      ↓
-ChromaDB
-      ↓
-Relevant Legal Evidence
-      ↓
-Retrieval Quality Filter
-      ↓
-Grounded Prompt
-      ↓
-Ollama
-      ↓
-Llama 3.2
-      ↓
-Answer + Sources + Disclaimer
-
-Technology Stack
-Frontend
-HTML
-CSS
-JavaScript
-Fetch API
-Backend
-Python
-FastAPI
-Pydantic
-Uvicorn
-Machine Learning and Analytics
-Pandas
-NumPy
-scikit-learn
-Isolation Forest
-statistical anomaly screening
-Generative AI and Retrieval
-Sentence Transformers
-ChromaDB
-Ollama
-Llama 3.2
-Retrieval-Augmented Generation
-Document Processing
-PyPDF
-Engineering
-Docker
-Docker Compose
-pytest
-structured logging
-centralized configuration
-global exception handling
-
-Repository Structure
-C-Drishti-GitHub/
-│
-├── index.html
-├── README.md
-├── docker-compose.yml
-├── .gitignore
-│
-├── analytics/
-│
-├── data/
-│   ├── README.md
-│   └── sample_procurement_data.xlsx
-│
-├── docs/
-│   ├── architecture.md
-│   └── screenshots/
-│
-└── backend/
-    │
-    ├── Dockerfile
-    ├── .dockerignore
-    ├── .env.example
-    ├── requirements.txt
-    ├── requirements-dev.txt
-    │
-    ├── app/
-    │   ├── api/
-    │   ├── core/
-    │   ├── models/
-    │   ├── rag/
-    │   ├── services/
-    │   └── main.py
-    │
-    ├── storage/
-    │   └── chroma/
-    │
-    └── tests/
-
-Local Setup
-Prerequisites
-
-Install:
-
-Python 3.11+
-Docker Desktop
-Ollama
-Git
-
-Pull the local LLM:
-
-ollama pull llama3.2:3b
-1. Clone the repository
-git clone <repository-url>
-cd C-Drishti-GitHub
-2. Create Python environment
-
-Windows PowerShell:
+Run Locally
+git clone https://github.com/Dr-AmitVishwakarma/C-Drishti.git
+cd C-Drishti
 
 python -m venv .venv
+
+Windows:
+
 .\.venv\Scripts\Activate.ps1
-
-Install backend dependencies:
-
 pip install -r backend\requirements.txt
-3. Configure environment
 
 Copy:
 
-backend/.env.example
+backend/.env.example → backend/.env
 
-to:
-
-backend/.env
-
-Default development values are already provided in the example file.
-
-4. Build the legal vector index
-
-Start FastAPI:
+Start the backend:
 
 cd backend
 uvicorn app.main:app --reload --port 8000
 
-Open:
-
-http://127.0.0.1:8000/docs
-
-Execute:
-
-POST /api/v1/rag/index
-
-This extracts the legal PDFs, creates embeddings, and stores the vectors in ChromaDB.
-
-5. Start the frontend
-
-From the repository root:
+Start the frontend from the project root:
 
 python -m http.server 8080
 
 Open:
 
 http://localhost:8080
-Docker
 
-Build:
-
-docker compose build
-
-Start:
-
-docker compose up -d
-
-Check:
-
-docker compose ps
-
-Backend API:
-
-http://127.0.0.1:8000
-
-Swagger:
+API documentation:
 
 http://127.0.0.1:8000/docs
+Local LLM
 
-Stop:
+Install Ollama and pull the model:
 
-docker compose down
+ollama pull llama3.2:3b
 
-Ollama currently runs on the host machine and is accessed from the backend container through:
+Build the legal index using:
 
-host.docker.internal
+POST /api/v1/rag/index
+Tests
+pytest -v
 
+The test suite covers the API, hybrid anomaly engine, validation, RAG filtering, safe refusal, and mocked LLM generation.
 
-The original software components in this repository are released under the
-MIT License. See [LICENSE](LICENSE).
+Docker
+docker compose build
+docker compose up -d
+Responsible Use
 
-Third-party legal documents, source materials, datasets, trademarks, and other
-external content remain subject to their respective rights and source terms
-and are not relicensed under the MIT License.
+C-Drishti is a research and engineering prototype.
+
+Anomaly scores indicate unusual patterns, not fraud or wrongdoing. Legal RAG responses must be verified against authoritative sources before real-world use. Consequential decisions remain human-controlled.
+
+License
+
+MIT License. See LICENSE.
